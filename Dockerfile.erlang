@@ -1,23 +1,21 @@
-FROM ubuntu:14.04
+FROM tdsparrow/dev-base
 
-COPY sources.list.trusty /etc/apt/sources.list
-
-RUN apt-get update
-
-RUN apt-get install -y --no-install-recommends make emacs
+USER root
 
 RUN apt-get install -y --no-install-recommends erlang rebar erlang-meck erlang-manpages
 
-RUN groupadd -g 1000 leon; useradd -m -g 1000 -u 1000 leon
+USER erenlii
 
-RUN mkdir /home/leon/.emacs.d
-COPY emacs/.emacs.erlang /home/leon/.emacs
-COPY emacs/emacs-config /home/leon/.emacs.d/emacs-config
-RUN chown -R leon:leon /home/leon/.emacs.d /home/leon/.emacs
+RUN mkdir /home/erenlii/.emacs.d
 
-USER leon
+ADD emacs/emacs-config /home/erenlii/.emacs.d/emacs-config
 
-RUN emacs -batch -l ~/.emacs
+RUN emacs -batch -l ~/.emacs.d/emacs-config/init.d/init-erlang-packages.el
 
+COPY emacs/.emacs.erlang /home/erenlii/.emacs
+
+USER root
+
+RUN chown -R erenlii:eusers /home/erenlii/.emacs.d/emacs-config /home/erenlii/.emacs
 
 

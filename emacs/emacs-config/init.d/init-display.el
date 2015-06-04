@@ -151,27 +151,14 @@
                                         ;(set-face-background 'region "lightblue")
 
 ;; === translate ANSI escape sequences into faces ===
-(GNUEmacs
- (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
- (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on))
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;; === Auto fit the size of the frame to the buffer content ===
 ;; see http://www.emacswiki.org/emacs/Shrink-Wrapping_Frames
 ;; run 'M-x fit-frame' for that
 (require 'fit-frame)
 (add-hook 'after-make-frame-functions 'fit-frame)
-
-;; =================================================================
-;; Aquamacs specific 
-;; =================================================================
-;; see http://www.emacswiki.org/emacs/AquamacsEmacsCompatibilitySettings
-(Aquamacs
- (aquamacs-autoface-mode -1)  ; no mode-specific faces, everything in Monaco
- ;; do not load persistent scratch buffer
- (setq aquamacs-scratch-file nil)
- ;; do not make initial frame visible
- (setq show-scratch-buffer-on-startup nil)
-)
 
 
 (provide 'init-display)
@@ -181,5 +168,3 @@
 ;; Local Variables: 
 ;; mode: lisp
 ;; End: 
-
-

@@ -6,27 +6,17 @@
 ;; ---------------------------------
 ;; For packages not included in ELPA
 ;;
-(setq load-path (cons "~/.emacs.d/emacs-config/init.d/" load-path))
-(setq load-path (cons "~/.emacs.d/emacs-config/site-lisp/" load-path))
-(setq load-path (cons "~/.emacs.d/auto-install/" load-path))
+(setq load-path (cons "/Sources/emacs-config/init.d/" load-path))
+(setq load-path (cons "/Sources/distel/elisp/" load-path))
 
-;; Assuming emacs 24
-(require 'package)
-(add-to-list 'package-archives
-	     '("marmalde" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("elpa" . "http://elpa.gnu.org/packages/"))
+(require 'init-erlang-packages)
+(require 'init-display)
+(require 'init-misc)
 
-(package-initialize)
+(require 'helm-config)
+(helm-mode 1)
 
-(defvar elpa-packages '(erlang cursor-chg auto-complete company
-                               markdown-mode  color-theme
-                               tabbar highlight-parentheses window-number
-                               zenburn-theme fit-frame anything winpoint yasnippet tempbuf ctypes)
-  "A list of packages to ensure are installed at launch.")
+(require 'distel)
+(distel-setup)
 
-(defvar emacswiki-packages '() )
-
-(require 'init-packages)
+(load-theme 'zenburn t)                                                                                                                                                                   
