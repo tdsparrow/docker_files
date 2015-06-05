@@ -2,12 +2,19 @@ FROM ubuntu:14.04
 
 ADD sources.list.trusty /etc/apt/sources.list
 
-RUN apt-get update
+RUN apt-get update; apt-get install -y --no-install-recommends make emacs git ca-certificates man
 
-RUN apt-get install -y --no-install-recommends make emacs git ca-certificates man
-
-RUN groupadd -g 64000 eusers; useradd -u 11090 -g 64000 -m erenlii
+RUN groupadd -g 64000 eusers; useradd -u 11090 -g 64000 -m erenlii; \
+    echo "export TERM=xterm-256color" >> /home/erenlii/.bashrc; \
+    chown -R erenlii:eusers /home/erenlii
 
 USER erenlii
 
-RUN echo "export TERM=xterm-256color" >> /home/erenlii/.bashrc
+RUN emacs --batch --eval "(add-to-list 'load-path "~/.emacs.d/el-get/el-get") \
+    (unless (require 'el-get nil 'noerror) \
+      (with-current-buffer \
+        (url-retrieve-synchronously \
+           \"https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el\") \
+        (goto-char (point-max)) \
+        (eval-print-last-sexp))) \
+    (el-get 'sync '(helm company zenburn-theme highlight-parentheses))"

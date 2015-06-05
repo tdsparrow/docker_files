@@ -1,29 +1,12 @@
-;--------------------------------------
-;; My personal .emacs file
-;;--------------------------------------
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(add-to-list 'load-path "/Sources/emacs-config/init.d")
 
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
 
-;; ---------------------------------
-;; For packages not included in ELPA
-;;
-(setq load-path (cons "~/.emacs.d/emacs-config/init.d/" load-path))
-(setq load-path (cons "~/.emacs.d/emacs-config/site-lisp/" load-path))
-(setq load-path (cons "~/.emacs.d/auto-install/" load-path))
-
-;; Assuming emacs 24
-(require 'package)
-(add-to-list 'package-archives
-	     '("marmalde" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-             '("elpa" . "http://elpa.gnu.org/packages/"))
-
-(package-initialize)
-
-(require 'auto-install)
-(require 'init-packages)
-(require 'init-var)
-(require 'init-depend)
-(require 'init-display)
-(require 'init-emodes)
+(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+(el-get 'sync)
