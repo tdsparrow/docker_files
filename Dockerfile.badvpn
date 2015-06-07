@@ -1,0 +1,12 @@
+FROM ubuntu:14.04
+
+ADD sources.list.trusty /etc/apt/sources.list
+
+RUN apt-get update; apt-get install -y --no-install-recommends software-properties-common; add-apt-repository ppa:ambrop7/badvpn; apt-get update; apt-get install -y badvpn
+
+RUN apt-get install -y --no-install-recommends xtables-addons-common iptables wget unzip libtext-csv-xs-perl
+
+RUN http_proxy=http://172.17.42.1:8123 /usr/lib/xtables-addons/xt_geoip_dl;  mkdir /usr/share/xt_geoip; /usr/lib/xtables-addons/xt_geoip_build -D /usr/share/xt_geoip *.csv; rm *.csv *.zip
+
+ADD fqroute /usr/bin/fqroute
+

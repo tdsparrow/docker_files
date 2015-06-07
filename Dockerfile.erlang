@@ -2,20 +2,13 @@ FROM tdsparrow/dev-base
 
 USER root
 
-RUN apt-get install -y --no-install-recommends erlang rebar erlang-meck erlang-manpages
+RUN apt-get install -y --no-install-recommends erlang rebar erlang-meck erlang-manpages erlang-doc w3m
 
-USER erenlii
+USER leon
 
-RUN mkdir /home/erenlii/.emacs.d
-
-ADD emacs/emacs-config /home/erenlii/.emacs.d/emacs-config
-
-RUN emacs -batch -l ~/.emacs.d/emacs-config/init.d/init-erlang-packages.el
-
-COPY emacs/.emacs.erlang /home/erenlii/.emacs
-
-USER root
-
-RUN chown -R erenlii:eusers /home/erenlii/.emacs.d/emacs-config /home/erenlii/.emacs
-
-
+RUN export http_proxy=http://172.17.42.1:8123; export https_proxy=$http_proxy; ln -s /Sources/emacs-config/init.d/erlang ~/.emacs.d/local; emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
+                                 (require 'el-get) \
+                                 (require 'package) \ 
+                                 (setq el-get-byte-compile nil) \
+                                 (add-to-list 'el-get-recipe-path \"~/.emacs.d/el-get/el-get/recipes/elpa\") \
+                                 (el-get 'sync '(edts)))"
