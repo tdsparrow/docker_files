@@ -4,9 +4,9 @@ USER root
 
 RUN apt-get install -y --no-install-recommends erlang rebar erlang-meck erlang-manpages erlang-doc w3m
 
-USER leon
+USER local
 
-RUN export http_proxy=http://172.17.42.1:8123; export https_proxy=$http_proxy; ln -s /Sources/emacs-config/init.d/erlang ~/.emacs.d/local; emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
+RUN export http_proxy=${proxy}; export https_proxy=${proxy}; ln -s /Sources/emacs-config/erlang ~/.emacs.d/local; emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
                                  (require 'el-get) \
                                  (require 'package) \ 
                                  (setq el-get-byte-compile nil) \

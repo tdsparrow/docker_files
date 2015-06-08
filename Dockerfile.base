@@ -2,30 +2,10 @@ FROM ubuntu:14.04
 
 ADD sources.list.trusty /etc/apt/sources.list
 
-RUN apt-get update; apt-get install -y --no-install-recommends make emacs git ca-certificates man wget
+RUN groupadd -g 64000 local; useradd -u 11090 -g 64000 -m local; \
+    echo "export TERM=xterm-256color" >> /home/local/.bashrc; \
+    chown -R local:local /home/local
 
-RUN groupadd -g 1000 leon; useradd -u 1000 -g 1000 -m leon; \
-    echo "export TERM=xterm-256color" >> /home/leon/.bashrc; \
-    chown -R leon:leon /home/leon
+RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates wget
 
-USER leon
-
-RUN cd ~/; export https_proxy=http://172.17.42.1:8123; wget https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el; emacs --batch -l ~/el-get-install.el
-
-RUN export https_proxy=http://172.17.42.1:8123; export http_proxy=http://172.17.42.1:8123; emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
-                                 (require 'el-get) \
-                                 (require 'package) \ 
-                                 (add-to-list 'package-archives \
-                                 	     '(\"marmalde\" . \"http://marmalade-repo.org/packages/\") t) \
-                                 (add-to-list 'package-archives \
-                                              '(\"melpa\" . \"http://melpa.milkbox.net/packages/\") t) \
-                                 (add-to-list 'package-archives \
-                                             '(\"elpa\" . \"http://elpa.gnu.org/packages/\") t) \
-                                 (el-get-elpa-build-local-recipes) \
-                                 (add-to-list 'el-get-recipe-path \"~/.emacs.d/el-get/el-get/recipes/elpa\") \
-                                 (setq el-get-byte-compile nil) \
-                                 (el-get 'sync '(helm company-mode monokai-theme highlight-parentheses \
-				                auto-highlight-symbol)))"
-
-RUN ln -s /Sources/emacs-config/.emacs.docker ~/.emacs; ln -s /Sources/emacs-config/init.d ~/.emacs.d/init.d
-
+ENV proxy=http://150.236.0.130:8080

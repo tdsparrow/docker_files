@@ -1,0 +1,25 @@
+FROM tdsparrow/base
+
+RUN apt-get install -y --no-install-recommends make emacs git wget
+
+USER local
+
+RUN cd ~/; export https_proxy=${proxy}; export http_proxy=${proxy}; wget https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el; emacs --batch -l ~/el-get-install.el
+
+RUN export https_proxy=${proxy}; export http_proxy=${proxy}; emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
+                                 (require 'el-get) \
+                                 (require 'package) \ 
+                                 (add-to-list 'package-archives \
+                                 	     '(\"marmalde\" . \"http://marmalade-repo.org/packages/\") t) \
+                                 (add-to-list 'package-archives \
+                                              '(\"melpa\" . \"http://melpa.milkbox.net/packages/\") t) \
+                                 (add-to-list 'package-archives \
+                                             '(\"elpa\" . \"http://elpa.gnu.org/packages/\") t) \
+                                 (el-get-elpa-build-local-recipes) \
+                                 (add-to-list 'el-get-recipe-path \"~/.emacs.d/el-get/el-get/recipes/elpa\") \
+                                 (setq el-get-byte-compile nil) \
+                                 (el-get 'sync '(helm company-mode monokai-theme highlight-parentheses \
+				                auto-highlight-symbol)))"
+
+RUN ln -s /Sources/emacs-config/.emacs.docker ~/.emacs; ln -s /Sources/emacs-config/init.d ~/.emacs.d/init.d
+
