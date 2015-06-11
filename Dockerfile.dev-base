@@ -1,6 +1,6 @@
 FROM tdsparrow/base
 
-RUN apt-get install -y --no-install-recommends make emacs git wget
+RUN apt-get install -y --no-install-recommends make man emacs git wget
 
 USER local
 
