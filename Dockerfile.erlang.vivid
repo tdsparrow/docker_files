@@ -1,4 +1,4 @@
-FROM tdsparrow/dev-base
+FROM tdsparrow/dev-base:vivid
 
 USER root
 
