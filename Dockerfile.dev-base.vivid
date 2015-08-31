@@ -1,4 +1,4 @@
-FROM tdsparrow/base
+FROM tdsparrow/base:vivid
 
 USER root
 
@@ -18,10 +18,8 @@ RUN  emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el
                                  (add-to-list 'package-archives \
                                              '(\"elpa\" . \"http://elpa.gnu.org/packages/\") t) \
                                  (el-get-elpa-build-local-recipes) \
-				 (defmacro elpa-get (p) \
-				    `(el-get-bundle elpa:,p)) \
-				 (dolist (p '(helm monokai-theme highlight-parentheses auto-highlight-symbol)) \
-				         (elpa-get p))
+                                 (dolist (p '(helm monokai-theme highlight-parentheses auto-highlight-symbol)) \
+                                     (el-get-bundle-el-get (list :name p :type 'elpa :after nil))) \
                                  (el-get 'sync '(company-mode)))"
 
 RUN ln -s /Sources/emacs-config/.emacs.docker ~/.emacs; ln -s /Sources/emacs-config/init.d ~/.emacs.d/init.d

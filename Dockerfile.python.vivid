@@ -1,0 +1,14 @@
+FROM tdsparrow/dev-base:vivid
+
+USER root
+
+RUN apt-get update; apt-get install -y --no-install-recommends python python-pip ipython
+
+RUN  pip install -i http://pypi.douban.com/simple/ rope
+
+USER local
+
+RUN  ln -s /Sources/emacs-config/python ~/.emacs.d/local; emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
+                                 (require 'el-get) \
+                                 (setq el-get-byte-compile nil) \
+				 (el-get-bundle elpy))"

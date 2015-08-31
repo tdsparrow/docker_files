@@ -1,4 +1,4 @@
-ip addr add 172.17.0.2/24 dev eth0
+ip addr add 172.17.128.2/24 dev eth0
 
 ip tuntap | grep tun0 || (
    ip tuntap add dev tun0 mode tun
@@ -8,26 +8,8 @@ ip tuntap | grep tun0 || (
 
 grep aboard /etc/iproute2/rt_tables || echo "200 aboard" >> /etc/iproute2/rt_tables
 
-iptables -t mangle -N fwmark || (
-         iptables -t mangle -D PREROUTING -j fwmark
-         iptables -t mangle -F fwmark
-         iptables -t mangle -Z fwmark
-)
-iptables -t mangle -A PREROUTING -j fwmark
-
-iptables -t mangle -A fwmark -d 0.0.0.0/8 -j RETURN
-iptables -t mangle -A fwmark -d 10.0.0.0/8 -j RETURN
-iptables -t mangle -A fwmark -d 127.0.0.0/8 -j RETURN
-iptables -t mangle -A fwmark -d 169.254.0.0/16 -j RETURN
-iptables -t mangle -A fwmark -d 172.16.0.0/12 -j RETURN
-iptables -t mangle -A fwmark -d 192.168.0.0/16 -j RETURN
-iptables -t mangle -A fwmark -d 224.0.0.0/4 -j RETURN
-iptables -t mangle -A fwmark -d 240.0.0.0/4 -j RETURN
-
-iptables -t mangle -A fwmark -m geoip ! --dst-cc CN -j MARK --set-mark 100
-
-ip rule | grep aboard || ip rule add fwmark 100 table aboard
+ip rule | grep aboard || ip rule add iif eth0 from 172.17.0.0/17 table aboard
 
 ip route add default via 10.0.0.2 table aboard
 
-badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.2550 --socks-server-addr 172.17.42.1:9055
+badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 172.17.42.1:9055
