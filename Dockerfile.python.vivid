@@ -1,14 +1,14 @@
-FROM tdsparrow/dev-base:vivid
+FROM tdsparrow/dev-base
 
 USER root
 
 RUN apt-get update; apt-get install -y --no-install-recommends python python-pip ipython
 
-RUN  pip install -i http://pypi.douban.com/simple/ rope
+RUN  pip install -i http://pypi.douban.com/simple/ rope pyflakes virtualenv
 
 USER local
 
-RUN  ln -s /Sources/emacs-config/python ~/.emacs.d/local; emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
+RUN  ln -s /Sources/emacs-config/python ~/.emacs.d/local; http_proxy=$proxy https_proxy=$http emacs --batch --eval "(progn (add-to-list 'load-path \"~/.emacs.d/el-get/el-get\") \
                                  (require 'el-get) \
                                  (setq el-get-byte-compile nil) \
 				 (el-get-bundle elpy))"
