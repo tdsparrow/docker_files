@@ -2,10 +2,10 @@ FROM ubuntu:14.04
 
 ADD sources.list.trusty /etc/apt/sources.list
 
-RUN groupadd -g 64000 local; useradd -u 11090 -g 64000 -m local; \
+RUN groupadd -g 1000 local; useradd -u 1000 -g 1000 -m local; \
     echo "export TERM=xterm-256color" >> /home/local/.bashrc; \
     chown -R local:local /home/local
 
 RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates wget
 
-ENV proxy=http://150.236.0.130:8080
+ENV proxy=http://172.17.42.1:3128

@@ -7,3 +7,6 @@ RUN groupadd -g 1000 local; useradd -u 1000 -g 1000 -m local; \
     chown -R local:local /home/local
 
 RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates wget
+
+ENV proxy=http://172.17.42.1:3128
+
