@@ -1,4 +1,6 @@
-ip addr add 172.17.128.2/24 dev eth0
+#!/bin/bash
+
+ip addr add 172.17.0.2/24 dev eth0
 
 ip tuntap | grep tun0 || (
    ip tuntap add dev tun0 mode tun
@@ -6,10 +8,42 @@ ip tuntap | grep tun0 || (
    ip addr add 10.0.0.1/24 dev tun0
 )
 
+sysctl -w net.ipv4.conf.all.rp_filter=0
+sysctl -w net.ipv4.conf.tun0.rp_filter=0
+
+iptables -t nat -N fqroute || (
+	 iptables -t nat -F fqroute
+	 iptables -t nat -X fqroute
+	 iptables -t nat -N fqroute
+)
+iptables -t nat -I POSTROUTING -j fqroute
+iptables -t nat -I fqroute -s 172.17.0.0/16 ! -d 172.17.0.0/16 -j MASQUERADE
+
+iptables -t mangle -N mark_ip || (
+	 iptables -t mangle -F mark_ip
+	 iptables -t mangle -X mark_ip
+ 	 iptables -t mangle -N mark_ip	
+)
+iptables -t mangle -I PREROUTING -j mark_ip
+
+special_ip="10.0.0.0/8 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.0.0.0/24  192.0.2.0/24 192.88.99.0/24 192.168.0.0/16 198.18.0.0/15 198.51.100.0/24 203.0.113.0/24 224.0.0.0/4"
+
+for ip in $special_ip
+do
+	iptables -t mangle -I mark_ip -d $ip -j RETURN
+done
+
+ipset destroy cn_block
+ipset create cn_block hash:net
+cat /root/cn.zone | while read ip; do ipset add cn_block $ip; done
+
+iptables -t mangle -A mark_ip -m set --match-set cn_block dst -j RETURN
+iptables -t mangle -A mark_ip -j MARK --set-mark 0x110
+
 grep aboard /etc/iproute2/rt_tables || echo "200 aboard" >> /etc/iproute2/rt_tables
 
-ip rule | grep aboard || ip rule add iif eth0 from 172.17.0.0/17 table aboard
+ip rule | grep aboard || ip rule add fwmark 0x110 table aboard
 
-ip route add default via 10.0.0.2 table aboard
+ip route list table aboard | grep default || ip route add default via 10.0.0.2 table aboard
 
-badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 172.17.42.1:9055
+badvpn-tun2socks --loglevel info --logger stdout --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr socks:9055

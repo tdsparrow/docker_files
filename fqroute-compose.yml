@@ -1,0 +1,17 @@
+badvpn:
+  build: .
+  dockerfile: Dockerfile.badvpn
+  links:
+    - socks
+  privileged: true
+  volumes:
+    - ./fqroute:/usr/bin/fqroute.sh
+    
+
+socks:
+  build: .
+  dockerfile: Dockerfile.ss
+  env_file:
+    - ./ss.env
+    
+  
