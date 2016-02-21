@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ip addr add 172.17.0.2/24 dev eth0
+ip addr add 172.17.128.2/24 dev eth0
 
 ip tuntap | grep tun0 || (
    ip tuntap add dev tun0 mode tun
@@ -25,6 +25,7 @@ iptables -t mangle -N mark_ip || (
  	 iptables -t mangle -N mark_ip	
 )
 iptables -t mangle -I PREROUTING -j mark_ip
+iptables -t mangle -I OUTPUT -j mark_ip
 
 special_ip="10.0.0.0/8 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.0.0.0/24  192.0.2.0/24 192.88.99.0/24 192.168.0.0/16 198.18.0.0/15 198.51.100.0/24 203.0.113.0/24 224.0.0.0/4"
 
