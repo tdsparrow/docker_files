@@ -2,4 +2,7 @@ FROM ubuntu:16.04
 
 ADD sources.list.xenial /etc/apt/sources.list
 
-RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates wget make emacs git wget man gcc
+RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates wget make emacs git wget man gcc g++
+
+RUN set -i -e 's/# en_US/en_US/g' /etc/locale.gen; locale-gen
+

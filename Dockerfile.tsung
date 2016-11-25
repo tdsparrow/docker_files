@@ -1,0 +1,5 @@
+FROM tdsparrow/base:xenial
+
+RUN apt-get install -y --no-install-recommends erlang rebar erlang-meck erlang-manpages erlang-doc w3m erlang-src
+
+RUN apt-get install tsung

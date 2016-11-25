@@ -1,0 +1,7 @@
+FROM tdsparrow/base:xenial
+
+RUN apt-get update; apt-get install -y --no-install-recommends python python-pip ipython libpq-dev libxml2-dev python-dev libxslt1-dev
+
+RUN pip install --upgrade pip setuptools
+
+RUN pip install rope pyflakes virtualenv
