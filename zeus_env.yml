@@ -1,0 +1,11 @@
+env: dev
+cluster: Common
+zookeeper_configs:
+    hosts: soa-zk.alpha.elenet.me:2181,soa-zk-1.alpha.elenet.me:2181,soa-zk-2.alpha.elenet.me:2181
+    username: test_admin
+    password: MDJhMjFjMGM3
+ops_db:
+    url: redis://192.168.80.51:8889
+statsd_url: statsd://statsd.alpha.elenet.me:8125
+etrace_uri: etrace-config.alpha.elenet.me:2890
+
