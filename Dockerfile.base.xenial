@@ -1,8 +1,9 @@
-FROM phusion/baseimage
+FROM solita/ubuntu-systemd
 
 ADD sources.list.xenial /etc/apt/sources.list
 
 RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates wget make emacs git wget man gcc g++ openssh-client
 
-RUN set -i -e 's/# en_US/en_US/g' /etc/locale.gen; locale-gen
+RUN apt-get install -y --no-install-recommends locales
 
+RUN set -i -e 's/# en_US/en_US/g' /etc/locale.gen; locale-gen
