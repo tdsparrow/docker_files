@@ -6,4 +6,4 @@ RUN apt-get update; apt-get install -y --no-install-recommends ca-certificates w
 
 RUN apt-get install -y --no-install-recommends locales
 
-RUN set -i -e 's/# en_US/en_US/g' /etc/locale.gen; locale-gen
+RUN sed -i -e 's/# en_US/en_US/g' /etc/locale.gen; locale-gen
